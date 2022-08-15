@@ -1,0 +1,13 @@
+/**
+ * @author samuelf@nebulaconsulting.co.uk
+ * @date 12/07/2022
+ */
+
+.parameters {
+    --sds-c-textarea-sizing-min-height: 120px;
+}
+
+.warningMessage {
+    font-size: 12px;
+    text-align: left;
+}

@@ -1,0 +1,132 @@
+<!--
+ - @author samuelf@nebulaconsulting.co.uk
+ - @date 07/07/2022
+ - @description (if required)
+ -->
+
+<!-- Trigger Metadata Record List -->
+<template>
+    <div>
+        <lightning-layout>
+            <lightning-layout-item size="9" class="slds-p-right_xx-small">
+                <article class="slds-card">
+                    <table class="slds-table slds-table_cell-buffer slds-table_bordered">
+                        <thead>
+                        <th>Object</th>
+                        <th>Event</th>
+                        <th>Order</th>
+                        <th>Apex Class</th>
+                        <th>Active</th>
+                        <th></th>
+                        </thead>
+                        <tbody>
+                        <template for:each={filteredRecords} for:item="record">
+                            <tr onmousedown={handleRowSelection} ondblclick={handleRowEditClicked}
+                                key={record.DeveloperName} data-id={record.Id}>
+                                <td>{record.nebc__SObject__c}</td>
+                                <td>{record.eventReadable}</td>
+                                <td>{record.nebc__Order__c}</td>
+                                <td>{record.nebc__Apex_Class__c}
+                                    <template if:true={record.isNebc}>
+                                        <img alt="Nebula Logo" class="slds-p-left_x-small" style="height:20px;" src={logo}>
+                                    </template>
+                                </td>
+                                <td>
+                                    <div class="slds-p-left_x-small">
+                                        <template if:true={record.nebc__Active__c}>
+                                            <lightning-icon icon-name="utility:check" size="small"></lightning-icon>
+                                        </template>
+                                        <template if:false={record.nebc__Active__c}>
+                                            <lightning-icon icon-name="utility:clear" size="small"></lightning-icon>
+                                        </template>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="slds-float_right">
+                                        <template if:false={record.isNebc}>
+                                            <lightning-button-icon icon-name="utility:edit"
+                                                                   onclick={handleRowEditClicked}
+                                                                   size="x-small"
+                                                                   alternative-text="Edit">
+
+                                            </lightning-button-icon>
+                                            <lightning-button-icon icon-name="utility:copy"
+                                                                   onclick={handleRowCloneClicked}
+                                                                   size="x-small"
+                                                                   class="slds-p-left_xx-small"
+                                                                   alternative-text="Clone">
+                                            </lightning-button-icon>
+                                        </template>
+                                        <lightning-button-icon icon-name="utility:new_window"
+                                                               onclick={handleNavigate}
+                                                               size="x-small"
+                                                               class="slds-p-left_xx-small"
+                                                               alternative-text="Open Record Page">
+                                        </lightning-button-icon>
+                                    </div>
+                                </td>
+                            </tr>
+                        </template>
+                        </tbody>
+                    </table>
+                </article>
+            </lightning-layout-item>
+            <lightning-layout-item size="3" class="slds-p-left_xx-small ">
+                <lightning-card title="Record Detail">
+                    <template if:true={recordSelected}>
+                        <div slot="actions">
+                            <lightning-button title="Clone"
+                                              label="Clone"
+                                              class="slds-p-horizontal_xx-small"
+                                              disabled={selectedRecordLocked}
+                                              onclick={toggleCloneModal}>
+                            </lightning-button>
+                            <lightning-button title="Edit"
+                                              label="Edit"
+                                              class="slds-p-horizontal_xx-small"
+                                              disabled={selectedRecordLocked}
+                                              onclick={toggleEditModal}>
+                            </lightning-button>
+                        </div>
+                    </template>
+
+                    <c-trigger-metadata-selected-record
+                            selected-record={selectedRecord}>
+                    </c-trigger-metadata-selected-record>
+                </lightning-card>
+                <br/>
+                <template if:true={hasDeployments}>
+                    <lightning-card class="slds-" title="Deploying Items">
+                        <table>
+                            <template for:each={metadataDeploying} for:item="record">
+                                <tr key={record.DeveloperName} class="slds-p-vertical_small">
+                                    <template if:false={record.complete}>
+                                        <td class="slds-p-left_medium slds-p-vertical_small">{record.MasterLabel}</td>
+                                        <td class="slds-p-right_large slds-p-vertical_small">
+                                            <lightning-tile>
+                                                <lightning-spinner alternative-text="metadata deploying"
+                                                                   size="small"></lightning-spinner>
+                                            </lightning-tile>
+                                        </td>
+                                    </template>
+                                </tr>
+                            </template>
+                        </table>
+                        <div slot="footer" class="deploymentFooter">
+                            <p>Deployment taking a long time? <a href={deploymentStatusURL}>Check status here</a></p>
+                        </div>
+                    </lightning-card>
+                </template>
+            </lightning-layout-item>
+        </lightning-layout>
+    </div>
+    <template if:true={editModalOpen}>
+        <c-trigger-metadata-manager-new-modal
+                all-metadata={allMetadata}
+                record-id={selectedRecordId}
+                onclosemodal={toggleEditModal}
+                ondeploy={handleDeploy}
+                is-clone={isClone}
+        ></c-trigger-metadata-manager-new-modal>
+    </template>
+</template>

@@ -1,0 +1,20 @@
+<!--
+ - @author samuelf@nebulaconsulting.co.uk
+ - @date 08/07/2022
+ - @description (if required)
+ -->
+
+<!-- Trigger Metadata Selected Record -->
+<template>
+    <div class="slds-p-around_medium" style="word-wrap: break-word;">
+        <template if:true={recordSelected}>
+            <p>Developer Name: <br/>{selectedRecord.DeveloperName}</p><br/>
+            <p>Description: <br/>{selectedRecord.nebc__Description__c}</p><br/>
+            <p>Parameters: <br/>{selectedRecord.nebc__Parameters__c}</p>
+
+        </template>
+        <template if:false={recordSelected}>
+            <p>Please select a record</p>
+        </template>
+    </div>
+</template>

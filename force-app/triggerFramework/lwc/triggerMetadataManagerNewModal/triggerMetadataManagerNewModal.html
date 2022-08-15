@@ -1,0 +1,148 @@
+<!--
+ - @author samuelf@nebulaconsulting.co.uk
+ - @date 12/07/2022
+ - @description (if required)
+ -->
+
+<!-- Trigger Metadata Manager New Modal -->
+<template>
+    <section role="dialog" tabindex="-1" aria-modal="true" aria-labelledby="modal-heading-01"
+             class="slds-modal slds-fade-in-open">
+        <div class="slds-modal__container">
+            <header class="slds-modal__header">
+                <h1>{label} Trigger Metadata Record</h1>
+            </header>
+            <div class="slds-modal__content slds-p-around_medium">
+                <lightning-layout multiple-rows="true">
+                    <lightning-layout-item class="slds-p-horizontal_x-small" size="6">
+                        <lightning-input class="sObjectType"
+                                         name="sObjectType"
+                                         type="text"
+                                         label="SObject Name"
+                                         value={data.sObjectType.value}
+                                         onchange={handleInputChange}
+                                         onblur={handleSObjectTypeCheck}
+                                         required></lightning-input>
+                    </lightning-layout-item>
+                    <lightning-layout-item class="slds-p-horizontal_x-small" size="6">
+                        <lightning-combobox name="event"
+                                            class="event"
+                                            label="Trigger Event"
+                                            value={data.event.value}
+                                            onchange={handleInputChange}
+                                            onblur={handleEventCheck}
+                                            options={eventOptions}
+                                            required="true">
+                        </lightning-combobox>
+                    </lightning-layout-item>
+                    <lightning-layout-item class="slds-p-horizontal_x-small" size="6">
+                        <lightning-input type="text"
+                                         name="apexClass"
+                                         label="Apex Class"
+                                         class="apexClass"
+                                         value={data.apexClass.value}
+                                         onchange={handleInputChange}
+                                         onblur={handleApexClassCheck}
+                                         field-level-help={data.apexClass.help}
+                                         required="true">
+                        </lightning-input>
+                    </lightning-layout-item>
+                    <lightning-layout-item class="slds-p-horizontal_x-small" size="3">
+                        <lightning-input type="number"
+                                         name="order"
+                                         class="order"
+                                         label="Order"
+                                         step="1"
+                                         value={data.order.value}
+                                         onchange={handleInputChange}
+                                         onblur={handleOrderCheck}
+                                         required>
+                        </lightning-input>
+                    </lightning-layout-item>
+                    <lightning-layout-item class="slds-p-horizontal_x-small slds-p-top_large" size="3">
+                        <lightning-input type="toggle"
+                                         label="Active"
+                                         checked={data.isActive.value}
+                                         onchange={handleActiveChange}>
+                        </lightning-input>
+                    </lightning-layout-item>
+                    <lightning-layout-item class="slds-p-horizontal_x-small" size="6">
+                        <lightning-input type="text"
+                                         label="Metadata Label"
+                                         name="label"
+                                         class="label"
+                                         onchange={handleInputChange}
+                                         onblur={handleLabelCheck}
+                                         value={data.label.value}
+                                         required="true">
+                        </lightning-input>
+                    </lightning-layout-item>
+                    <lightning-layout-item class="slds-p-horizontal_x-small" size="6">
+                        <lightning-input type="text"
+                                         label="Metadata Developer Name"
+                                         class="developerName"
+                                         name="developerName"
+                                         value={data.developerName.value}
+                                         onchange={handleInputChange}
+                                         onblur={handleDeveloperNameCheck}
+                                         required="true">
+                        </lightning-input>
+                    </lightning-layout-item>
+                    <lightning-layout-item class="slds-p-horizontal_x-small" size="12">
+                        <lightning-textarea label="Description"
+                                            class="description"
+                                            name="description"
+                                            value={data.description.value}
+                                            onchange={handleInputChange}
+                                            onblur={handleDescriptionCheck}
+                                            required="true">
+
+                        </lightning-textarea>
+                    </lightning-layout-item>
+                    <lightning-layout-item class="slds-p-horizontal_x-small" size="12">
+                        <lightning-textarea label="Parameters"
+                                            class="parameters"
+                                            name="parameters"
+                                            value={data.parameters.value}
+                                            onchange={handleInputChange}
+                                            onblur={handleParametersCheck}
+                        >
+                        </lightning-textarea>
+                    </lightning-layout-item>
+
+
+                </lightning-layout>
+            </div>
+            <footer class="slds-modal__footer">
+                <lightning-layout vertical-align="center">
+                    <lightning-layout-item class="slds-clearfix" size="8" >
+                        <template if:true={metadataAlreadyExists}>
+                            <p class="slds-float_left slds-p-horizontal_x-small warningMessage">
+                                A metadata record for this Apex class and Event Type already exists
+                            </p>
+                        </template>
+                        <template if:true={jsonEnabledWarningVisible}>
+                            <p class="slds-float_left slds-p-horizontal_x-small warningMessage">
+                                This class must be decorated with @JSONAccess(Deserializable='always') to receive parameters
+                            </p>
+                        </template>
+                    </lightning-layout-item>
+                    <lightning-layout-item size="4">
+                        <button class="slds-button slds-button_neutral"
+                                onclick={closeModal}
+                                disabled={submitClicked}
+                                title="Cancel">Cancel
+                        </button>
+                        <button class="slds-button slds-button_brand"
+                                onclick={handleSubmit}
+                                disabled={submitClicked}
+                                title="Submit">Submit
+                        </button>
+                    </lightning-layout-item>
+                </lightning-layout>
+
+            </footer>
+        </div>
+    </section>
+    <div class="slds-backdrop slds-backdrop_open" role="presentation"></div>
+</template>

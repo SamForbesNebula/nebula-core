@@ -1,0 +1,64 @@
+<!--
+ - @author samuelf@nebulaconsulting.co.uk
+ - @date 07/07/2022
+ - @description (if required)
+ -->
+
+<!-- Trigger Metadata Manager -->
+<template>
+    <template if:false={hasOptions}>
+        <lightning-card>
+            <lightning-spinner size="large"></lightning-spinner>
+        </lightning-card>
+    </template>
+    <template if:true={hasOptions}>
+        <article class="slds-card slds-m-bottom_medium">
+            <div class="slds-clearfix">
+                <lightning-layout class="slds-p-around_small" vertical-align="center">
+                    <lightning-layout-item size="3">
+                        <h2 class="slds-text-heading_medium">Trigger Manager</h2>
+                    </lightning-layout-item>
+                    <lightning-layout-item size="4" class="slds-p-horizontal_small">
+                        <lightning-combobox class="slds-align_absolute-center" name="object"
+                                            placeholder="Select an SObject Type"
+                                            value={selectedObjectType}
+                                            options={options}
+                                            variant="label-hidden"
+                                            onchange={handleSObjectSelection}>
+                        </lightning-combobox>
+                    </lightning-layout-item>
+                    <lightning-layout-item size="2" class="slds-p-horizontal_small">
+                        <lightning-combobox class="slds-align_absolute-center" name="object"
+                                            placeholder="Select a Trigger Event"
+                                            value={selectedEventType}
+                                            options={eventOptions}
+                                            variant="label-hidden"
+                                            onchange={handleEventTypeSelection}>
+                        </lightning-combobox>
+                    </lightning-layout-item>
+                    <lightning-layout-item class="slds-p-right_x-small" size="3">
+                        <lightning-button label="New"
+                                          variant="brand"
+                                          class="slds-float_right"
+                                          onclick={toggleModal}>
+                        </lightning-button>
+                    </lightning-layout-item>
+                </lightning-layout>
+            </div>
+        </article>
+        <c-trigger-metadata-record-list
+                onselected={handleSelected}
+                onqueryrecords={handlePoll}
+                filtered-records={filteredRecords}
+                all-metadata={allRecords}>
+        </c-trigger-metadata-record-list>
+    </template>
+    <template if:true={newModalOpen}>
+        <c-trigger-metadata-manager-new-modal onclosemodal={toggleModal}
+                                              selected-event-type={selectedEventType}
+                                              selected-s-object-type={selectedObjectType}
+                                              all-metadata={allRecords}
+                                              ondeploy={handleDeploy}
+        ></c-trigger-metadata-manager-new-modal>
+    </template>
+</template>

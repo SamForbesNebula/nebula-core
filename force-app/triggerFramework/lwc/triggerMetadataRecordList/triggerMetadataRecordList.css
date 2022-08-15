@@ -1,0 +1,12 @@
+/**
+ * @author samuelf@nebulaconsulting.co.uk
+ * @date 08/07/2022
+ */
+
+.selected {
+    background-color: #c3d677;
+}
+
+.deploymentFooter {
+    font-size: 11px;
+}
