@@ -5,6 +5,7 @@
 
 import {LightningElement, api, track} from 'lwc';
 import logo from '@salesforce/resourceUrl/NebulaLogoNoText';
+import {NavigationMixin} from "lightning/navigation";
 
 const columns = [
 
@@ -18,7 +19,7 @@ const columns = [
 
 const intervalTime = 10000;
 
-export default class TriggerMetadataRecordList extends LightningElement {
+export default class TriggerMetadataRecordList extends NavigationMixin(LightningElement) {
 
     @api filteredRecords;
     @api allMetadata;
@@ -44,8 +45,13 @@ export default class TriggerMetadataRecordList extends LightningElement {
 
     handleNavigate(event) {
         event.stopPropagation();
-        const url = window.location.origin + '/lightning/setup/CustomMetadata/page?address=%2F' + this.selectedRecordId;
-        window.open(url);
+        this[NavigationMixin.GenerateUrl]({
+            type: 'standard__recordPage',
+            attributes: {
+                recordId: this.selectedRecordId,
+                actionName: 'view'
+            }
+        }).then(url => window.open(url, "_blank"));
     }
 
     connectedCallback() {
